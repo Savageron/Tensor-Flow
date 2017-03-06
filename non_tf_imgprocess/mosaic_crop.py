@@ -135,51 +135,37 @@ def null_set():
     while len(randomnullListtemp2) < totalnumber: #problem: is the first 7000 of the random sample 164836 truly randomly distributed?
         r = r + 1
         rndmcoord = nullList[randomnullListtemp[r]]
+        coordinanimalbox = 1
         for i in allspeciescoord:
+#            coordinanimalbox = 1 #if the the coord is within crab box value = 0
             if abs(rndmcoord[0]-i[0]) < boxsize + 25:
                 if abs(rndmcoord[1]-i[1]) < boxsize + 25:
+                    coordinanimalbox = coordinanimalbox * 0
                     break
-                else:
-                    pass
-            else:
-                
-#    print ("First filtered number of random samples is {}".format\
-#           (len(randomnullListtemp2)))
-                    img1 = img.crop(
-                            (
-                                    rndmcoord[0]-boxsize/2,
-                                    rndmcoord[1]-boxsize/2,
-                                    rndmcoord[0]-boxsize/2,
-                                    rndmcoord[1]-boxsize/2
-                            )
+        if coordinanimalbox == 1:
+#    print (len(randomnullListtemp2)
+            img1 = img.crop(
+                    (
+                            rndmcoord[0]-boxsize/2,
+                            rndmcoord[1]-boxsize/2,
+                            rndmcoord[0]+boxsize/2,
+                            rndmcoord[1]+boxsize/2
                     )
-                    Iar = numpy.asarray(img1)
-                    Iar2 = (Iar.tolist())
-                    print (type(Iar))
-                    print (type(Iar2))
-#                    Iar2 = Iar.tolist()
-#                    print (type(Iar2))
-                    sys.exit("asdasd")
-#                    numberofwhitepixels = 0
-#                    for row in Iar2:
-#                        numberofwhitepixels = numberofwhitepixels + \
-#                        row.count([255, 255, 255])
-#                    if numberofwhitepixels/boxsize**2 < 0.25:
-#                        randomnullListtemp2.append(rndmcoord)
-#                        break
-#                    else:
-#                        break
-#    print (len(randomnullListtemp2))
-#    sys.exit("stop here")
-#                        n = n + 1
-#                        img1.save(nullpath+"/{}_{}_all/{}-{}.tif".format\
-#                                  (NSe[1],boxsize,NSe[1],"%06d"%n))
-#    nullArray = numpy.asarray(randomnullListtemp2)
-#    numpy.savetxt(nullpath+"/{}_{}.csv".format(NSe[0],boxsize),\
-#                      nullArray, delimiter=",")
-
-
-
+            )
+            Iar = numpy.asarray(img1)
+            Iar2 = Iar.tolist()
+            numberofwhitepixels = 0
+            for row in Iar2:
+                numberofwhitepixels = numberofwhitepixels + \
+                row.count([255, 255, 255])
+            if numberofwhitepixels/boxsize**2 < 0.25:
+                randomnullListtemp2.append(rndmcoord)
+                n = n + 1
+                img1.save(nullpath+"/{}_{}_all/{}-{}.tif".format\
+                          (NSe[1],boxsize,NSe[1],"%05d"%n))
+    nullArray = numpy.asarray(randomnullListtemp2)
+    numpy.savetxt(nullpath+"/{}_{}.csv".format(NSe[0],boxsize),\
+                  nullArray, delimiter=",")
 
 #    for i in nullList: #this step is taking too long!
 #        for j in allspeciescoord:
