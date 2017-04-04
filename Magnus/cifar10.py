@@ -35,7 +35,7 @@
 import numpy as np
 import pickle
 import os
-import download
+#import download
 from dataset import one_hot_encoded
 #import tensorflow as tf 
 import sys
@@ -44,8 +44,13 @@ import sys
 
 # Directory where you want to download and save the data-set.
 # Set this before you start calling any of the functions below.
-data_path = "D:/Iheya_n/NBC_2.0/" #"data/CIFAR-10/"
-
+Numberoftrainingsamples = 156
+Numberoftestsamples = 5250  
+# Number of images for each batch-file in the training-set.
+_images_per_file = int(Numberoftrainingsamples/3)
+#data_path = "D:/Iheya_n/HvassTutResults/1BJaBPlSCr/3to1ratio/{}Train/num_iter_128000_{}Test/".format(Numberoftrainingsamples, Numberoftestsamples) #"data/CIFAR-10/"
+#data_path = "D:/Iheya_n/HvassTutResults/2BatSCrNSe/3to1ratio/{}Train/num_iter_10000_{}Test/".format(Numberoftrainingsamples, Numberoftestsamples)
+data_path = "D:/Iheya_n/HvassTutResults/2BatSCrNSe/NewResults/3to1ratio/156Train/"
 # URL for the data-set on the internet.
 #data_url = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
 
@@ -71,9 +76,6 @@ num_classes = 3 #10
 # Number of files for the training-set.
 _num_files_train = 3 #5
 
-# Number of images for each batch-file in the training-set.
-_images_per_file = 5250
-
 # Total number of images in the training-set.
 # This is used to pre-allocate arrays for efficiency.
 _num_images_train = _num_files_train * _images_per_file
@@ -82,10 +84,6 @@ _num_images_train = _num_files_train * _images_per_file
 # Private functions for downloading, unpacking and loading data-files.
 
 label_bytes = 1  # 2 for CIFAR-100
-#result.height = img_size
-#result.width = img_size
-#result.depth = num_channels
-#image_bytes = result.height * result.width * result.depth = img_size_flat
 record_bytes = label_bytes + img_size_flat
 
 def _get_file_path(filename):
@@ -170,18 +168,15 @@ def _load_data(filename):
     copyofstringtolist = list(stringtolist)
     del copyofstringtolist[::record_bytes]
     raw_images = copyofstringtolist
-###    print(len(raw_images))
 
     # Get the class-numbers for each image. Convert to numpy-array.
 #    cls = np.array(data[b'labels'])
     clslist = (stringtolist[::record_bytes])
-###    print (len(clslist))
-###    print (clslist[:10])
     cls = np.array(clslist)
 
     # Convert the images.
     images = _convert_images(raw_images)
-###    print (len(images))
+
     return images, cls
 #to check
 #len(images)=5250, images = np.zeros(shape=[_num_images_train, img_size, img_size, num_channels], dtype=float)
