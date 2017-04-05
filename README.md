@@ -1,7 +1,7 @@
 # Tensor-Flow
 Third Year Individual Project
 
-"Magnus" folder
+"Magnus" folder /n
 Contains the simplified cifar10 version of Convolutional Neural Network for processing the Iheya_n files
 -cache.py: 
 -cifar10.py: 
