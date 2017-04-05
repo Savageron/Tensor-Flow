@@ -19,7 +19,7 @@ Contains the actual cifar10 version of Convolutional Neural Network for processi
 "non_tf_imgprocess" folder\
 Contains the codes to process the raw images/mosaic to produce an output in the desired format for feeding into the Convolutional Neural Network.\
 -databatchmixing.py: \
--mosaic_crop.py: crops \
+-mosaic_crop.py: To crop imgaes from mosaic with coordinates defined in a csvfile. To sort them into training/test set. To combine the two bathymodiolus species as one data set. To generate nullset. To convert text file to bin file. \
 -ratiochange.py: \
 -ratiochangefix.py: \
 -showanimage.py: \
