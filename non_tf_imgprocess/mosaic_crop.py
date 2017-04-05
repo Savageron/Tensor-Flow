@@ -37,7 +37,7 @@ import random
 import numpy
 #import copy
 #import time
-import sys
+import sys #to test sys.exit("stop here")
 
 Image.MAX_IMAGE_PIXELS = 1000000000 #to silence DecompressionBombWarning DOS
 
@@ -45,13 +45,14 @@ Image.MAX_IMAGE_PIXELS = 1000000000 #to silence DecompressionBombWarning DOS
 #if species = 2 means Bathy....
 
 #should i use a,b,c,d,e,f instead of 0,1,2,3...?
-Alv = ["Alvinocaridid", "Alv", "Alvinocaridid", 3]
-BJa = ["Bathymodiolus_japonicus", "BJa", "Bathymodiolus_japonicus", 0] 
-BPl = ["Bathymodiolus_platifrons_corrected", "BPl", "Bathymodiolus_platifrons", 1]
+Alv = ["Alvinocaridid", "Alv", "Alvinocaridid", 7]
+BJa = ["Bathymodiolus_japonicus", "BJa", "Bathymodiolus_japonicus", 6] 
+BPl = ["Bathymodiolus_platifrons_corrected", "BPl", "Bathymodiolus_platifrons", 5]
 Par = ["Paralomis", "Par", "Paralomis", 4]
-SCr = ["Shinkaia_crosnieri", "SCr", "Shinkaia_crosnieri", 2]
-TDe = ["Thermosipho_desbruyesi", "TDe","Thermosipho_desbruyesi", 5]
-NSe = ["Null_set", "NSe", "Null_set", 6]
+SCr = ["Shinkaia_crosnieri", "SCr", "Shinkaia_crosnieri", 1]
+TDe = ["Thermosipho_desbruyesi", "TDe","Thermosipho_desbruyesi", 3]
+NSe = ["Null_set", "NSe", "Null_set", 2]
+Bat = ["Bat", "Bat", "Bat", 0]
 
 """to automate run all species"""
 #x = [Alv, BJa, BPl, Par, SCr, TDe]
@@ -60,7 +61,7 @@ NSe = ["Null_set", "NSe", "Null_set", 6]
 #    training(trainingtest)
 
 allspecies = [Alv, BJa, BPl, Par, SCr, TDe]
-species = SCr
+species = Bat
 
 excelfile = "{}.csv".format(species[0])
 mosfile = "D:/Iheya_n/NBC_2m_2014/mosaics/NBC_2m_2014_mosaic_layer.tif"
@@ -68,11 +69,11 @@ boxsize = 50  #must be even number, boxsize of 50 means 50x50pixel box
 imgname = species[1]
 path = "D:/Iheya_n/NBC/{}/{}_{}".format(species[2], species[1], boxsize)
 """check if cifar code already included training and testing sample"""
-trainingtest = 3/1
+trainingtest = 3
 totalnumber = 7000 #"""number of each species ie. test + training"""
 
 #counts the number of items of interest in the csvfile
-def count():
+def count(excelfile):
     m = 0
     with open (excelfile) as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
@@ -102,6 +103,8 @@ def mosaic_crop(excelfile, mosfile, boxsize, imgname):
 #20320x20320 pixels, include line if array all white (ie [255,255,255]) or more than 75% white then delete it
 #for 50x50 pixel of whole 20320x20320 map, 20 pixel at the right end and btm end neglected
 #generate random number and filter, and ... 
+#6 mar 2017 approx 16s per random number for first filter. add second filter time and multiply by ~7000 will be ur total time for null_set() (estimation)
+
 def null_set():
     nullpath = path[:14]+"/{}/{}_{}".format(NSe[0],NSe[1],boxsize)
     nullList = []
@@ -206,11 +209,12 @@ def null_set():
 
 #generate training and test set, training and test csv file
 def training(trainingtest):
+    #Equation below ensures that training and test number is always int regardless of any ratio. int func takes in the lowest value eg, 10.1 = 10, 10.7 = 10...
     trainingnumber = int(trainingtest * totalnumber / (trainingtest + 1))
     trainingset = numpy.zeros(shape=(trainingnumber, 1))
     testset = numpy.zeros(shape=(totalnumber-trainingnumber, 1))
     j = 0
-    for i in random.sample(range(1, (count()+1)), totalnumber): #python2 use xrange
+    for i in random.sample(range(1, (count(excelfile)+1)), totalnumber): #python2 use xrange
         if j < trainingnumber:
             trainingset[j]="%5d" % i
             j=j+1
@@ -260,6 +264,71 @@ def training(trainingtest):
 #        ImgArrayTest.write(lineToWrite)
         ImgArrayTest.write(Iar1)
 
+def Battraining():
+    trainingnumber = int(trainingtest * totalnumber / (trainingtest + 1))
+    trainingset = numpy.zeros(shape=(int(trainingnumber/2), 1)) #2625 for totalnumber = 7000
+    testset = numpy.zeros(shape=(int((totalnumber-trainingnumber)/2), 1)) #875 for totalnumber = 7000
+    combinedspecies = [BJa, BPl]
+    #creates 2 csv file of test and train for each species containing the specific labels
+    for k in combinedspecies:
+        excelfile = "{}.csv".format(k[0])
+        imgname = k[1]
+        j = 0
+        for i in random.sample(range(1, (count(excelfile)+1)), int(totalnumber/2)): #python2 use xrange
+            if j < trainingnumber/2:
+                trainingset[j]="%5d" % i
+                j=j+1
+            else:
+                testset[j-int(trainingnumber/2)]="%5d" % i
+                j=j+1
+        path = "D:/Iheya_n/NBC/{}/{}_{}".format("Bat", "Bat", boxsize) #D:/Iheya_n/NBC/Bat/Bat_50
+        numpy.savetxt(path + "/" + imgname + "train.csv", trainingset, delimiter=",")
+        numpy.savetxt(path + "/" + imgname + "test.csv", testset, delimiter=",")
+#def convertImg():
+        ImgArrayTrain = open(path + "/{}train_{}.txt".format("Bat", boxsize), "a")
+        ImgArrayTest = open(path + "/{}test_{}.txt".format("Bat", boxsize), "a")
+        path = "D:/Iheya_n/NBC/{}/{}_{}".format(k[2], k[1], boxsize)
+        for i in trainingset:
+            Io = Image.open(path + "/" + imgname + "_{}_all/{}-{}.tif".\
+                            format(boxsize, imgname, "%05d" % i)) #"%05d" % n)
+            Iar = numpy.asarray(Io)
+            Iar1 = "{},".format(species[3])
+            for row in Iar:
+                for element in row:
+                    Iar1 = Iar1 + str(element[0]) + ","
+            for row in Iar:
+                for element in row:
+                    Iar1 = Iar1 + str(element[1]) + ","
+            for row in Iar:
+                for element in row:
+                    Iar1 = Iar1 + str(element[2]) + ","
+#or use for loop, then str(Iar[0,0,i]), or [0,r,i]...??
+#        Iar1 = str(Iar.tolist())
+#        lineToWrite = species[3] +":"+Iar1+"\n"
+#        ImgArrayTrain.write(lineToWrite)
+            ImgArrayTrain.write(Iar1)
+        for i in testset:
+            Io = Image.open(path + "/" + imgname + "_{}_all/{}-{}.tif".\
+                            format(boxsize, imgname, "%05d" % i)) #"%05d" % n)
+            Iar = numpy.asarray(Io)
+            Iar1 = "{},".format(species[3])
+            for row in Iar:
+                for element in row:
+                    Iar1 = Iar1 + str(element[0]) + ","
+            for row in Iar:
+                for element in row:
+                    Iar1 = Iar1 + str(element[1]) + ","
+            for row in Iar:
+                for element in row:
+                    Iar1 = Iar1 + str(element[2]) + ","
+#        Iar1 = str(Iar.tolist())
+#        lineToWrite = species[3] +":"+Iar1+"\n"
+#        ImgArrayTest.write(lineToWrite)
+            ImgArrayTest.write(Iar1)
+            #Battrain_50.txt contains 2625 samples of BJa followed by 2625 samples of BPl
+            #Battest_50.txt contains 875 samples of BJa followed by 875 samples of BPl.
+            #Their Coordinates are in the csv file accordingly
+
 #currently this function for training only for first attempt. just so happen training
 #ratio is just nice, reconstruct code for other training ratio, esp folder organisation
 #now u know how to create file, create folders too.
@@ -274,8 +343,21 @@ def txttobinconverter():
         with open(strfile, 'bw') as f:
             f.write(buffer)
 
+def txttobinconverteridentical():
+    totalstring = []
+    for i in range(1,4):
+        path = "D:/Iheya_n/NBC_2.0/data_batch_{}.txt".format(i)
+        readtxt = open(path, "r")
+        string = readtxt.read()
+        stringtolist = [int(s) for s in string[:-1].split(",")]
+        totalstring.append(stringtolist[:13126750])
+    buffer = bytes(stringtolist)
+    strfile = r"D:/Iheya_n/NBC_2.0/test_batch_iden_all.bin"
+    with open(strfile, 'bw') as f:
+        f.write(buffer)
+
 def txttobinconvertertestcombine():
-    selectedspecies = [BJa, BPl, SCr]
+    selectedspecies = [Bat, SCr, NSe]
     string = ""
     for i in selectedspecies:
         species = i
@@ -284,7 +366,7 @@ def txttobinconvertertestcombine():
         string = string + readtxt.read()
     stringtolist = [int(s) for s in string[:-1].split(",")]
     buffer = bytes(stringtolist)
-    strfile = r"{}/{}{}_{}.bin".format(path[:10], "BJaBPlSCr", 'test', boxsize)
+    strfile = r"{}/{}{}_{}.bin".format(path[:10], "BatScrNSe", 'test', boxsize)
     with open(strfile, 'bw') as f:
         f.write(buffer)
 
