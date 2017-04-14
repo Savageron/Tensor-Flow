@@ -3,7 +3,7 @@ Automated Intepretation of Seafloor 3D Visual Mapping Data Obtained using Underw
 Third Year Individual Project
 
 "Magnus" folder\
-Contains the simplified cifar10 version of Convolutional Neural Network for processing the Iheya_n files\
+Contains the simplified cifar10 version of Convolutional Neural Network for processing the Iheya_n files, modified from https://github.com/Hvass-Labs/TensorFlow-Tutorials/blob/master/06_CIFAR-10.ipynb \
 -cache.py: \
 -cifar10.py: \
 -cifar10HvassLabs1.py: \
