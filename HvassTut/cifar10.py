@@ -1,8 +1,5 @@
 ########################################################################
 #
-# Functions for downloading the CIFAR-10 data-set from the internet
-# and loading it into memory.
-#
 # Implemented in Python 3.5
 #
 # Usage:
