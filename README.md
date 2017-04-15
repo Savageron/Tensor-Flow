@@ -4,18 +4,14 @@ Third Year Individual Project
 
 "HvassTut" folder\
 Contains the simplified cifar10 version of Convolutional Neural Network for processing the Iheya_n files, modified from https://github.com/Hvass-Labs/TensorFlow-Tutorials/blob/master/06_CIFAR-10.ipynb \
--cache.py: \
--cifar10.py: \
--cifar10HvassLabs1.py: \
--dataset.py: 
+-cache.py: Save the result of calling a function or creating an object-instance to harddisk. This is used to persis the data so it can be reloaded very quickly and easily\
+-cifar10.py: Contains functions for loading the Iheya_n data\
+-cifar10HvassLabs2.py: Contains the algorithms of the CNN for varying training data with constant test data\
+-cifar10HvassLabs4.py: Contains the algorithms of the CNN for varying ratio data\
+-dataset.py: Class for creating a data-set consisting of all files in a directory 
 
 "cifar10_on_Iheya" folder\
 Contains the actual cifar10 version of Convolutional Neural Network for processing the Iheya_n files, but is discontinued as it is too complicated and time consuming to alter the algorithm to produce desired outputs.\
--_init_.py:\
--cifar10.py: \
--cifar10_eval.py: \
--cifar10_input.py: \
--cifar10_train.py: 
 
 "non_tf_imgprocess" folder\
 Contains the codes to process the raw images/mosaic to produce an output in the desired format for feeding into the Convolutional Neural Network.\
@@ -25,4 +21,5 @@ Contains the codes to process the raw images/mosaic to produce an output in the 
 -showanimage.py: This code was created to output a cropped image of the mosaic at the coordinates of interest to check whether the image from null set that showed a bathymodiolus is indeed unlabelled.\
 -sizecutting3to1ratio.py: Change the number of training data set from the 3 to 1 train to test ratio data set, but keeping the test set the same.
 
-Author: Jin Lim
+Author: Jin Lim 27226778\
+University of Southampton
