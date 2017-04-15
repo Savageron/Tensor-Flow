@@ -1,8 +1,8 @@
 # Tensor-Flow
-Automated Intepretation of Seafloor 3D Visual Mapping Data Obtained using Underwater Robots
+Automated Intepretation of Seafloor 3D Visual Mapping Data Obtained using Underwater Robots\
 Third Year Individual Project
 
-"Magnus" folder\
+"HvassTut" folder\
 Contains the simplified cifar10 version of Convolutional Neural Network for processing the Iheya_n files, modified from https://github.com/Hvass-Labs/TensorFlow-Tutorials/blob/master/06_CIFAR-10.ipynb \
 -cache.py: \
 -cifar10.py: \
