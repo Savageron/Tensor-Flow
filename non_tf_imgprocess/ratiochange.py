@@ -3,12 +3,10 @@ import sys
 pathof3to1ratiototal = "D:/Iheya_n/HvassTutResults/2BatSCrNSe/3to1ratio/15750Train/num_iter_10000_5250Test"
 #"D:/Iheya_n/HvassTutResults/1BJaBPlSCr/3to1ratio/21000pax"
 
-import cifar10
-
 recordbytelength = 50*50*3+1
 
 def ratiochange(traintotestratio,traintotestratiofoldername):
-        numberoftrainingsamples = 5250*4*traintotestratio/(traintotestratio+1)
+        numberoftrainingsamples = int(5250*4*traintotestratio/(traintotestratio+1))
         while numberoftrainingsamples % 3 != 0:
                numberoftrainingsamples = numberoftrainingsamples + 1
         else:
@@ -41,14 +39,13 @@ def ratiochange(traintotestratio,traintotestratiofoldername):
         data_batch_1_list = []
         data_batch_2_list = []
         data_batch_3_list = []
-        test_batch_list = []
         for i in [[BJa,data_batch_1_list,"data_batch_1.txt"],[BPl,data_batch_2_list,"data_batch_2.txt"],[SCr,data_batch_3_list,"data_batch_3.txt"]]:
                 k = 0
+                test_batch_list = []
                 for j in random.sample(range(7000), 7000):
                         if k < numberoftrainingsamples/3:
                                 i[1] = i[1] + i[0][int(recordbytelength*j):int(recordbytelength+recordbytelength*j)]
                                 k=k+1
-                                #if k/500==int:
                                 if k%1000==0:
                                         print ("k={}".format(k))
                                         print (len(i[1]))
@@ -61,33 +58,15 @@ def ratiochange(traintotestratio,traintotestratiofoldername):
                 print ("Check if length of data_batch list is {} == {}".format(len(i[1]),recordbytelength*numberoftrainingsamples/3))
                 print ("Check if length of test_batch list is {} == {}".format(len(test_batch_list),recordbytelength*numberoftestsamples/3))
                 print ("==========================")
-                path = "D:/Iheya_n/HvassTutResults/2BatSCrNSe/{}/".format(traintotestratiofoldername)
+                path = "D:/Iheya_n/HvassTutResults/2BatSCrNSe/NewResults/{}/".format(traintotestratiofoldername)
                 print (i[1][:10])
                 print (','.join(str(e) for e in i[1][:20]) + ',')
                 data_batch_string = ','.join(str(e) for e in i[1]) + ','
                 data_batch = open(path + i[2], "a")
                 data_batch.write(data_batch_string)
-        test_batch_string = ','.join(str(e) for e in test_batch_list) + ','
-        test_batch = open(path + "test_batch.txt", "a")
-        test_batch.write(test_batch_string)
-        #print ("Check if length of data_batch_1_list is {} == {}".format(len(data_batch_1_list),recordbytelength*numberoftrainingsamples/3))
-        #print ("Check if length of data_batch_2_list is {} == {}".format(len(data_batch_2_list),recordbytelength*numberoftrainingsamples/3))
-        #print ("Check if length of data_batch_3_list is {} == {}".format(len(data_batch_3_list),recordbytelength*numberoftrainingsamples/3))
-        #print ("Check if length of test_batch_list is {} == {}".format(len(test_batch_list),recordbytelength*numberoftestsamples))
-        #print ("==========================")
-        #path = "D:/Iheya_n/HvassTutResults/2BatSCrNSe/{}/".format(traintotestratiofoldername)
-        #data_batch_1_string = ','.join(str(e) for e in data_batch_1_list) + ','
-        #data_batch_1 = open(path + "data_batch_1.txt", "a")
-        #data_batch_1.write(data_batch_1_string)
-        #data_batch_2_string = ','.join(str(e) for e in data_batch_2_list) + ','
-        #data_batch_2 = open(path + "data_batch_2.txt", "a")
-        #data_batch_2.write(data_batch_2_string)
-        #data_batch_3_string = ','.join(str(e) for e in data_batch_3_list) + ','
-        #data_batch_3 = open(path + "data_batch_3.txt", "a")
-        #data_batch_3.write(data_batch_3_string)
-        #test_batch_string = ','.join(str(e) for e in test_batch_list) + ','
-        #test_batch = open(path + "test_batch.txt", "a")
-        #test_batch.write(test_batch_string)
+                test_batch_string = ','.join(str(e) for e in test_batch_list) + ','
+                test_batch = open(path + "test_batch.txt", "a")
+                test_batch.write(test_batch_string)
 #        for i in random.sample(range(len(5250*4)),numberoftrainingsamples):
 
 #        for i in filenames[:3]:
@@ -97,7 +76,8 @@ def ratiochange(traintotestratio,traintotestratiofoldername):
 #        sys.exit("123")
 #        filecheck = f.open(pathof3to1ratiototal)
 
-differentratios = [[4/1,"4to1ratio"],[2/1,"2to1ratio"],[1/1,"1to1ratio"],[1/2,"1to2ratio"],[1/3,"1to3ratio"],[1/4,"1to4ratio"]]
+#differentratios = [[4/1,"4to1ratio"],[2/1,"2to1ratio"],[1/1,"1to1ratio"],[1/2,"1to2ratio"],[1/3,"1to3ratio"],[1/4,"1to4ratio"]]
+differentratios = [[1/5,"1to5ratio"],[1/10,"1to10ratio"],[1/20,"1to20ratio"], [1/50,"1to50ratio"],[1/100,"1to100ratio"],[1/200,"1to200ratio"],[1/500,"1to500ratio"]]
 for i in differentratios:
         ratiochange(i[0],i[1])
 
